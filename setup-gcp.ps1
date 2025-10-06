@@ -111,3 +111,4 @@ Write-Host "  Check status: gcloud run services describe cloud-jam-leaderboard -
 Write-Host ""
 
 
+

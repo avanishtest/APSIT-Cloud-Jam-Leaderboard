@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import DynamicTableHeader from './DynamicTableHeader'
 import TableBody from './TableBody'
-import { ELIGIBILITY_CONFIG } from '@/config/tableConfig'
+import { ELIGIBILITY_CONFIG, hasCompletedAll } from '@/config/tableConfig'
 
 function TableIndex() {
   const [data, setData] = useState([]);
@@ -66,10 +66,8 @@ function TableIndex() {
           setCsvHeaders(result.headers);
         }
         
-        // Calculate eligibility using config
-        const eligible = sortedData.filter(
-          (ele) => ele[ELIGIBILITY_CONFIG.field] === ELIGIBILITY_CONFIG.eligibleValue
-        ).length;
+        // Calculate eligibility using dynamic completion check (19 badges + 1 game)
+        const eligible = sortedData.filter((participant) => hasCompletedAll(participant)).length;
         setEligibleforSwags(eligible);
         
         setLoading(false);

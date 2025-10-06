@@ -293,3 +293,4 @@ gcloud run services delete cloud-jam-leaderboard --region us-central1
 - Check logs: `gcloud run logs read cloud-jam-leaderboard`
 
 
+

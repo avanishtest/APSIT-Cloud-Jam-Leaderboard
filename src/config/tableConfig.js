@@ -30,7 +30,11 @@ export const COLUMN_CONFIG = [
       mobileVisible: true,
       className: 'User_Name p-3 uppercase',
       render: (value, row) => {
-        const badge = row["All Skill Badges & Games Completed"] === "Yes" ? '🏅' : '';
+        // Import at top of file handled separately - using inline check for now
+        const skillBadges = parseInt(row['# of Skill Badges Completed']) || 0;
+        const arcadeGames = parseInt(row['# of Arcade Games Completed']) || 0;
+        const isComplete = skillBadges >= 19 && arcadeGames >= 1;
+        const badge = isComplete ? '🏅' : '';
         return `${value} ${badge}`;
       }
     },
@@ -81,8 +85,11 @@ export const COLUMN_CONFIG = [
       visible: true,
       mobileVisible: false,
       className: 'Completions_both_Pathways_relative p-3 text-center mob:hidden',
-      render: (value) => {
-        const isComplete = value === "Yes";
+      render: (value, row) => {
+        // Dynamic calculation based on new requirements (19 badges + 1 game)
+        const skillBadges = parseInt(row['# of Skill Badges Completed']) || 0;
+        const arcadeGames = parseInt(row['# of Arcade Games Completed']) || 0;
+        const isComplete = skillBadges >= 19 && arcadeGames >= 1;
         return `
           <div class="m-auto w-fit rounded-3xl px-5 py-1 text-center ${
             isComplete ? 'bg-green-200 text-green-600' : 'bg-yellow-200 text-yellow-600'
@@ -160,4 +167,19 @@ export const COLUMN_CONFIG = [
 export const ELIGIBILITY_CONFIG = {
   field: 'All Skill Badges & Games Completed',
   eligibleValue: 'Yes'
+};
+
+// Completion requirements configuration
+export const COMPLETION_REQUIREMENTS = {
+  minSkillBadges: 19,  // Minimum skill badges required for completion
+  minArcadeGames: 1    // Minimum arcade games required for completion
+};
+
+// Helper function to check if participant has completed all requirements
+export const hasCompletedAll = (participant) => {
+  const skillBadges = parseInt(participant['# of Skill Badges Completed']) || 0;
+  const arcadeGames = parseInt(participant['# of Arcade Games Completed']) || 0;
+  
+  return skillBadges >= COMPLETION_REQUIREMENTS.minSkillBadges && 
+         arcadeGames >= COMPLETION_REQUIREMENTS.minArcadeGames;
 };
